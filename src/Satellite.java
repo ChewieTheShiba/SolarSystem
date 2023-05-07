@@ -5,11 +5,11 @@ public class Satellite
 {
 	
 	private int x, y, radius;
-	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel, strongestGrav, xGrav, yGrav;
+	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel, strongestGrav;
 	private ArrayList<Point> orbit;
 	private Planet strongest;
 
-	public Satellite(int x, int y, int radius, double mass)
+	public Satellite(int x, int y, int radius, double mass, double yVel)
 	{	
 		this.x = x;
 		this.y = y;
@@ -18,9 +18,8 @@ public class Satellite
 		strongest = null;
 		orbit = new ArrayList<Point>();
 		xVel = 0;
-		yVel = 0;
-		xGrav = 0;
-		yGrav = 0;
+		//everything needs starting why velocity otherwise they just move in a line
+		this.yVel = yVel;
 	}
 
 	public int getX()
@@ -140,19 +139,31 @@ public class Satellite
 		System.out.println(x);
 		System.out.println(SolarPanel.SCALINGFACTOR);
 		
-		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)+1920/2-radius, (int)(y*SolarPanel.SCALINGFACTOR)+1080/2-radius, radius*2, radius*2);
+		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2);
 	}
 	
-	public double getGravity(ArrayList<Planet> planets)
+	public void getGravity(ArrayList<Planet> planets)
 	{
 		strongestGrav = 0;
+		double tempXGrav = 0;
+		double tempYGrav = 0;
 		
 		for(Planet p : planets)
 		{
 
-			double xDist = x - p.getX();
-			double yDist = y - p.getY();
+			double xDist = p.getX() - x;
+			double yDist = p.getY() - y;
 			double dist = Math.sqrt(xDist*xDist + yDist*yDist);
+			
+			if(xDist > 0 && yVel > 0)
+				yVel *= -1;
+			else if(xDist < 0 && yVel < 0)
+				yVel *= -1;
+			
+			if(yDist < 0 && xVel > 0)
+				xVel *= -1;
+			else if(yDist > 0 && xVel < 0)
+				xVel *= -1;
 			
 			double Gravity = SolarPanel.GCONSTANT * mass * p.getMass() / (dist*dist);
 			
@@ -161,20 +172,26 @@ public class Satellite
 				strongestGrav = Gravity;
 				strongest = p;
 				
-				double theta = 0;
+				double theta = Math.atan2(yDist, xDist);
 				
-				if(xDist != 0)
-					theta = Math.atan(yDist/xDist);
-				else
-					theta = Math.atan(yDist/0.000001);
+				System.out.println("hiiiiiiiii\t" + yVel);
+				System.out.println("\t" + xVel);
+				System.out.println(Math.cos(theta) * Gravity);
+				System.out.println("xxxxxxxxx" + x);
+				System.out.println("yyyyyyyyy" + y);
 				
-				xGrav = Math.cos(theta) * Gravity;
-				yGrav = Math.sin(theta) * Gravity;
+				tempXGrav = Math.cos(theta) * Gravity;
+				tempYGrav = Math.sin(theta) * Gravity;
 			}
 		}
-			
 		
+		xVel += tempXGrav / mass * SolarPanel.time;
+		yVel += tempYGrav / mass * SolarPanel.time;
+		
+		x += xVel * SolarPanel.time;
+		y += yVel * SolarPanel.time;
 	}
+	
 	
 	
 	

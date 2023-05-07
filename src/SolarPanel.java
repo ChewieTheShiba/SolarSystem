@@ -14,11 +14,13 @@ public class SolarPanel extends JPanel
 {
 	//variables for the overall width and height
 	private int w, h;
-	public static final double GCONSTANT = 6.67408E-11, ASTROUNIT = 149.6e6 * 1000, SCALINGFACTOR = 30000 / ASTROUNIT;
-	private double initialTheta, time;
+	public static final double GCONSTANT = 6.67408E-11, ASTROUNIT = 149.6e6 * 1000, SCALINGFACTOR = 300000 / ASTROUNIT, OPPSCALINGFACTOR = 1/SCALINGFACTOR;
+	private double initialTheta;
+	public static double time;
 	private Planet Earth;
 	private Satellite SpaceShip;
 	private Timer timer;
+	private ArrayList<Planet> planets;
 	
 	
 	//sets up the initial panel for drawing with proper size
@@ -28,10 +30,16 @@ public class SolarPanel extends JPanel
 		this.h = h;
 		this.setPreferredSize(new Dimension(w,h));
 		
-		time = 24*60*60;
+		time = 24*60;
 		
-		Earth = new Planet(0, 0, 50, 5.97219E24, Color.blue);
-		SpaceShip = new Satellite((int)ASTROUNIT, 0, 25, 2.03E6);
+		Earth = new Planet((int)(w/2 * OPPSCALINGFACTOR), (int) (h/2 * OPPSCALINGFACTOR), 50, 5.97219E25, Color.blue);
+		SpaceShip = new Satellite((int)((w/2+300) * OPPSCALINGFACTOR), (int) ((h/2-300) * OPPSCALINGFACTOR), 25, 2.03E6, 7900);
+		
+		planets = new ArrayList<Planet>();
+		planets.add(Earth);
+		
+		timer = new Timer(20, new ActionListen());
+		timer.start();
 	}
 	
 	
@@ -54,7 +62,9 @@ public class SolarPanel extends JPanel
 	
 	public void update()
 	{
-		
+		SpaceShip.getGravity(planets);
+		System.out.println("hi");
+		repaint();
 	}
 	
 	private class ActionListen implements ActionListener
