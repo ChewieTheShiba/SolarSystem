@@ -1,15 +1,19 @@
+import java.awt.*;
+import java.util.*;
 
 public class Planet
 {
-	private int x, y;
-	private double mass, gravity;
+	private int x, y, radius;
+	private double mass, gravity, xVel, yVel;
+	private Color color;
 	
-	public Planet(int x, int y, double mass)
+	public Planet(int x, int y, int radius, double mass, Color color)
 	{
 		this.x = x;
 		this.y = y;
+		this.radius = radius;
 		this.mass = mass;
-		
+		this.color = color;
 	}
 
 	public int getX()
@@ -52,6 +56,10 @@ public class Planet
 		this.gravity = gravity;
 	}
 	
-	
+	public void drawPlanet(Graphics2D g)
+	{
+		g.setColor(color);
+		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)+1920/2-radius, (int)(y*SolarPanel.SCALINGFACTOR)+1080/2-radius, radius*2, radius*2);
+	}
 
 }

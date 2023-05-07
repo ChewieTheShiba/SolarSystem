@@ -1,17 +1,26 @@
+import java.awt.*;
+import java.util.*;
 
 public class Satellite
 {
 	
-	private int x, y;
-	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel;
+	private int x, y, radius;
+	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel, strongestGrav, xGrav, yGrav;
+	private ArrayList<Point> orbit;
+	private Planet strongest;
 
-	public Satellite(int x, int y, double mass)
-	{
+	public Satellite(int x, int y, int radius, double mass)
+	{	
 		this.x = x;
 		this.y = y;
+		this.radius = radius;
 		this.mass = mass;
+		strongest = null;
+		orbit = new ArrayList<Point>();
 		xVel = 0;
 		yVel = 0;
+		xGrav = 0;
+		yGrav = 0;
 	}
 
 	public int getX()
@@ -125,7 +134,47 @@ public class Satellite
 	}
 	
 	
+	public void drawSatellite(Graphics2D g)
+	{
+		g.setColor(Color.black);
+		System.out.println(x);
+		System.out.println(SolarPanel.SCALINGFACTOR);
+		
+		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)+1920/2-radius, (int)(y*SolarPanel.SCALINGFACTOR)+1080/2-radius, radius*2, radius*2);
+	}
 	
+	public double getGravity(ArrayList<Planet> planets)
+	{
+		strongestGrav = 0;
+		
+		for(Planet p : planets)
+		{
+
+			double xDist = x - p.getX();
+			double yDist = y - p.getY();
+			double dist = Math.sqrt(xDist*xDist + yDist*yDist);
+			
+			double Gravity = SolarPanel.GCONSTANT * mass * p.getMass() / (dist*dist);
+			
+			if(Gravity > strongestGrav)
+			{
+				strongestGrav = Gravity;
+				strongest = p;
+				
+				double theta = 0;
+				
+				if(xDist != 0)
+					theta = Math.atan(yDist/xDist);
+				else
+					theta = Math.atan(yDist/0.000001);
+				
+				xGrav = Math.cos(theta) * Gravity;
+				yGrav = Math.sin(theta) * Gravity;
+			}
+		}
+			
+		
+	}
 	
 	
 	
