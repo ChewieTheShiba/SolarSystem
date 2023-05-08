@@ -9,8 +9,8 @@ public class SolarFrame //Main class
 	{
 		//change to match your values for width/height
 		//these can be changed
-		int w = 1920;
-		int h = 1080;
+		int w = 2560;
+		int h = 1440;
 		
 		//sets up a JFrame object with title "Template"
 		JFrame frame = new JFrame("Solar System");
@@ -19,10 +19,9 @@ public class SolarFrame //Main class
 		//adds the drawing panel to the frame
 		frame.getContentPane().add(new SolarPanel(w,h));
 		//resizes the frame to fit the panel
+		frame.setUndecorated(true);
 		frame.pack();
-		//makes it visible
 		frame.setVisible(true);
-
 	}
 
 }

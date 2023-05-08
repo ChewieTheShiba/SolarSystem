@@ -17,10 +17,12 @@ public class SolarPanel extends JPanel
 	public static final double GCONSTANT = 6.67408E-11, ASTROUNIT = 149.6e6 * 1000, SCALINGFACTOR = 300000 / ASTROUNIT, OPPSCALINGFACTOR = 1/SCALINGFACTOR;
 	private double initialTheta;
 	public static double time;
-	private Planet Earth, Mars;
+	private Planet Earth, Mars, Jupiter, Venus;
 	private Satellite SpaceShip;
 	private Timer timer;
 	private ArrayList<Planet> planets;
+	private JPanel panel;
+	public static boolean placedShip;
 	
 	
 	//sets up the initial panel for drawing with proper size
@@ -32,17 +34,25 @@ public class SolarPanel extends JPanel
 		
 		time = 24*60;
 		
-		//Earth = new Planet((int)(((w/2 * OPPSCALINGFACTOR * 0))+100), (int) ((h/2 * OPPSCALINGFACTOR * 0)+100), 50, 5.97219E25, Color.blue);
-		//Mars = new Planet((int)((w/2-200) * OPPSCALINGFACTOR), (int) (h/2 * OPPSCALINGFACTOR), 50, 5.97219E26, Color.red);
-		Earth = new Planet((int)(500*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 50, 5.97219E25, Color.blue);
-		SpaceShip = new Satellite((int)(((w/2-300)*0 + 350) * OPPSCALINGFACTOR), (int) (((h/2+200)*0 + 400) * OPPSCALINGFACTOR), 25, 2.03E6, 7900);
+		placedShip = false;
+		
+		panel = new JPanel();
+		
+		Venus = new Planet((int)(400*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 45, 4.867E25, new ImageIcon("assets/Venus.png"), "Venus");
+		Earth = new Planet((int)(500*OPPSCALINGFACTOR), (int)(1000*OPPSCALINGFACTOR), 50, 5.97219E25, new ImageIcon("assets/Earth.png"), "Earth");
+		Mars = new Planet((int)(900*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 40, 6.39E24, new ImageIcon("assets/Mars.png"), "Mars");
+		Jupiter = new Planet((int)(1800*OPPSCALINGFACTOR), (int)(1000*OPPSCALINGFACTOR), 56, 8.898E25, new ImageIcon("assets/Jupiter.png"), "Jupiter");
 		
 		planets = new ArrayList<Planet>();
+		planets.add(Venus);
 		planets.add(Earth);
-		//planets.add(Mars);
+		planets.add(Mars);
+		planets.add(Jupiter);
 		
 		timer = new Timer(20, new ActionListen());
 		timer.start();
+		this.add(panel);
+		this.addMouseListener(new MouseListen());
 	}
 	
 	
@@ -57,17 +67,32 @@ public class SolarPanel extends JPanel
 		//all drawings below here:
 		g.setColor(Color.black);
 		g.setColor(Color.blue);
-		Earth.drawPlanet(g);
-		//Mars.drawPlanet(g);
-		SpaceShip.drawSatellite(g);
+		for(Planet p : planets)
+			p.drawPlanet(panel, g);
+		
+		g.setFont(new Font("Comic Sans", Font.PLAIN, 36));
+			
+		if(placedShip)
+		{
+			SpaceShip.drawSatellite(panel, g);
+			if(!SpaceShip.getMessage().equals(""))
+				g.drawString(SpaceShip.getMessage(), w/2-150, 30);
+		}
+		
+		if(!placedShip && SpaceShip == null)
+			g.drawString("Click to Place Ship", w/2-150, 25);
+		else if(!placedShip)
+			g.drawString(SpaceShip.getMessage() + ". Click to Place Ship", w/2-350, 25);
+		
 		
 		
 	}
 	
 	public void update()
 	{
-		SpaceShip.getGravity(planets);
-		System.out.println("hi");
+		if(placedShip)
+			SpaceShip.getGravity(planets);
+		
 		repaint();
 	}
 	
@@ -85,4 +110,49 @@ public class SolarPanel extends JPanel
 		}
 		
 	}
+	
+	private class MouseListen implements MouseListener
+	{
+
+		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+			if(!placedShip)
+			{
+				SpaceShip = new Satellite((int)(e.getPoint().getX() * OPPSCALINGFACTOR), (int) (e.getPoint().getY() * OPPSCALINGFACTOR), 58, 2.03E6, 7000, new ImageIcon("assets/Rocket.png"));
+				placedShip = true;
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e)
+		{
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	
 }

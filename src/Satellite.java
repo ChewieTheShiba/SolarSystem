@@ -1,25 +1,31 @@
 import java.awt.*;
 import java.util.*;
+import javax.swing.*;
 
 public class Satellite
 {
 	
-	private int x, y, radius;
-	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel, strongestGrav;
+	private int x, y, radius, ogx, ogy;
+	private double mass, velocity, direction, time, orbitRadius, acceleration, force, xVel, yVel, OGYvel;
 	private ArrayList<Point> orbit;
-	private Planet strongest;
+	private ImageIcon sprite;
+	private String message;
 
-	public Satellite(int x, int y, int radius, double mass, double yVel)
+	public Satellite(int x, int y, int radius, double mass, double yVel, ImageIcon sprite)
 	{	
 		this.x = x;
 		this.y = y;
+		ogx = x;
+		ogy = y;
 		this.radius = radius;
 		this.mass = mass;
-		strongest = null;
+		message = "";
 		orbit = new ArrayList<Point>();
 		xVel = 0;
+		this.sprite = sprite;
 		//everything needs starting why velocity otherwise they just move in a line
 		this.yVel = yVel;
+		OGYvel = yVel;
 	}
 
 	public int getX()
@@ -133,18 +139,13 @@ public class Satellite
 	}
 	
 	
-	public void drawSatellite(Graphics2D g)
+	public void drawSatellite(JPanel panel, Graphics2D g)
 	{
-		g.setColor(Color.black);
-		System.out.println(x);
-		System.out.println(SolarPanel.SCALINGFACTOR);
-		
-		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2);
+		sprite.paintIcon(panel, g, (int)(x*SolarPanel.SCALINGFACTOR-radius), (int)(y*SolarPanel.SCALINGFACTOR-radius));
 	}
 	
 	public void getGravity(ArrayList<Planet> planets)
 	{
-		strongestGrav = 0;
 		double tempXGrav = 0;
 		double tempYGrav = 0;
 		
@@ -155,44 +156,47 @@ public class Satellite
 			double yDist = p.getY() - y;
 			double dist = Math.sqrt(xDist*xDist + yDist*yDist);
 			
-			/*if(xDist > 0 && yVel > 0)
-				yVel *= -1;
-			else if(xDist < 0 && yVel < 0)
-				yVel *= -1;
-			
-			if(yDist < 0 && xVel > 0)
-				xVel *= -1;
-			else if(yDist > 0 && xVel < 0)
-				xVel *= -1;*/
-			
 			double Gravity = SolarPanel.GCONSTANT * mass * p.getMass() / (dist*dist);
+				
+			double theta = Math.atan2(yDist, xDist);
+				
+			System.out.println("thetaaaaa\t" + theta);
+				
+			tempXGrav += Math.cos(theta) * Gravity;
+			tempYGrav += Math.sin(theta) * Gravity;
 			
-			if(Gravity > strongestGrav)
-			{
-				strongestGrav = Gravity;
-				strongest = p;
-				
-				double theta = Math.atan2(yDist, xDist);
-				
-				/*System.out.println("hiiiiiiiii\t" + yVel);
-				System.out.println("\t" + xVel);
-				System.out.println(Math.cos(theta) * Gravity);
-				System.out.println("xxxxxxxxx" + x);
-				System.out.println("yyyyyyyyy" + y);*/
-				
-				System.out.println("thetaaaaa\t" + theta);
-				
-				tempXGrav = Math.cos(theta) * Gravity;
-				tempYGrav = Math.sin(theta) * Gravity;
-			}
+			if(new Rectangle((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2).intersects((int)(p.getX()*SolarPanel.SCALINGFACTOR)-20, (int)(p.getY()*SolarPanel.SCALINGFACTOR)-20, 20, 20))
+					message = "You Have Landed on " + p.getName();
+
 		}
+		
+		if(y*SolarPanel.SCALINGFACTOR < -500 || y*SolarPanel.SCALINGFACTOR > 1940 || x*SolarPanel.SCALINGFACTOR < -500 || x*SolarPanel.SCALINGFACTOR > 3060)
+			message = "Your Crew Has Died";
 		
 		xVel += tempXGrav / mass * SolarPanel.time;
 		yVel += tempYGrav / mass * SolarPanel.time;
 		
 		x += xVel * SolarPanel.time;
 		y += yVel * SolarPanel.time;
+		
+		if(!message.equals(""))
+		{
+			SolarPanel.placedShip = false;
+			sprite = new ImageIcon("");
+		}
 	}
+
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public void setMessage(String message)
+	{
+		this.message = message;
+	}
+	
+	
 	
 	
 	

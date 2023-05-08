@@ -1,19 +1,22 @@
 import java.awt.*;
 import java.util.*;
+import javax.swing.*;
 
 public class Planet
 {
 	private int x, y, radius;
 	private double mass, gravity, xVel, yVel;
-	private Color color;
+	private ImageIcon sprite;
+	private String name;
 	
-	public Planet(int x, int y, int radius, double mass, Color color)
+	public Planet(int x, int y, int radius, double mass, ImageIcon sprite, String name)
 	{
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
 		this.mass = mass;
-		this.color = color;
+		this.sprite = sprite;
+		this.name = name;
 	}
 
 	public int getX()
@@ -34,6 +37,18 @@ public class Planet
 	public void setY(int y)
 	{
 		this.y = y;
+	}
+	
+	
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 	public double getMass()
@@ -56,10 +71,21 @@ public class Planet
 		this.gravity = gravity;
 	}
 	
-	public void drawPlanet(Graphics2D g)
+	
+	
+	public int getRadius()
 	{
-		g.setColor(color);
-		g.fillOval((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2);
+		return radius;
+	}
+
+	public void setRadius(int radius)
+	{
+		this.radius = radius;
+	}
+
+	public void drawPlanet(JPanel panel, Graphics2D g)
+	{
+		sprite.paintIcon(panel, g, (int)(x*SolarPanel.SCALINGFACTOR-radius), (int)(y*SolarPanel.SCALINGFACTOR-radius));
 	}
 
 }
