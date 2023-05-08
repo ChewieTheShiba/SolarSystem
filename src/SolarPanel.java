@@ -17,7 +17,7 @@ public class SolarPanel extends JPanel
 	public static final double GCONSTANT = 6.67408E-11, ASTROUNIT = 149.6e6 * 1000, SCALINGFACTOR = 300000 / ASTROUNIT, OPPSCALINGFACTOR = 1/SCALINGFACTOR;
 	private double initialTheta;
 	public static double time;
-	private Planet Earth;
+	private Planet Earth, Mars;
 	private Satellite SpaceShip;
 	private Timer timer;
 	private ArrayList<Planet> planets;
@@ -32,11 +32,14 @@ public class SolarPanel extends JPanel
 		
 		time = 24*60;
 		
-		Earth = new Planet((int)(w/2 * OPPSCALINGFACTOR), (int) (h/2 * OPPSCALINGFACTOR), 50, 5.97219E25, Color.blue);
-		SpaceShip = new Satellite((int)((w/2+300) * OPPSCALINGFACTOR), (int) ((h/2-300) * OPPSCALINGFACTOR), 25, 2.03E6, 7900);
+		//Earth = new Planet((int)(((w/2 * OPPSCALINGFACTOR * 0))+100), (int) ((h/2 * OPPSCALINGFACTOR * 0)+100), 50, 5.97219E25, Color.blue);
+		//Mars = new Planet((int)((w/2-200) * OPPSCALINGFACTOR), (int) (h/2 * OPPSCALINGFACTOR), 50, 5.97219E26, Color.red);
+		Earth = new Planet((int)(500*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 50, 5.97219E25, Color.blue);
+		SpaceShip = new Satellite((int)(((w/2-300)*0 + 350) * OPPSCALINGFACTOR), (int) (((h/2+200)*0 + 400) * OPPSCALINGFACTOR), 25, 2.03E6, 7900);
 		
 		planets = new ArrayList<Planet>();
 		planets.add(Earth);
+		//planets.add(Mars);
 		
 		timer = new Timer(20, new ActionListen());
 		timer.start();
@@ -55,6 +58,7 @@ public class SolarPanel extends JPanel
 		g.setColor(Color.black);
 		g.setColor(Color.blue);
 		Earth.drawPlanet(g);
+		//Mars.drawPlanet(g);
 		SpaceShip.drawSatellite(g);
 		
 		

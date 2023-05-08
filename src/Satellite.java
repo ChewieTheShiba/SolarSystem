@@ -155,7 +155,7 @@ public class Satellite
 			double yDist = p.getY() - y;
 			double dist = Math.sqrt(xDist*xDist + yDist*yDist);
 			
-			if(xDist > 0 && yVel > 0)
+			/*if(xDist > 0 && yVel > 0)
 				yVel *= -1;
 			else if(xDist < 0 && yVel < 0)
 				yVel *= -1;
@@ -163,7 +163,7 @@ public class Satellite
 			if(yDist < 0 && xVel > 0)
 				xVel *= -1;
 			else if(yDist > 0 && xVel < 0)
-				xVel *= -1;
+				xVel *= -1;*/
 			
 			double Gravity = SolarPanel.GCONSTANT * mass * p.getMass() / (dist*dist);
 			
@@ -174,11 +174,13 @@ public class Satellite
 				
 				double theta = Math.atan2(yDist, xDist);
 				
-				System.out.println("hiiiiiiiii\t" + yVel);
+				/*System.out.println("hiiiiiiiii\t" + yVel);
 				System.out.println("\t" + xVel);
 				System.out.println(Math.cos(theta) * Gravity);
 				System.out.println("xxxxxxxxx" + x);
-				System.out.println("yyyyyyyyy" + y);
+				System.out.println("yyyyyyyyy" + y);*/
+				
+				System.out.println("thetaaaaa\t" + theta);
 				
 				tempXGrav = Math.cos(theta) * Gravity;
 				tempYGrav = Math.sin(theta) * Gravity;
