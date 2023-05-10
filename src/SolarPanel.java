@@ -17,7 +17,7 @@ public class SolarPanel extends JPanel
 	public static final double GCONSTANT = 6.67408E-11, ASTROUNIT = 149.6e6 * 1000, SCALINGFACTOR = 300000 / ASTROUNIT, OPPSCALINGFACTOR = 1/SCALINGFACTOR;
 	private double initialTheta;
 	public static double time;
-	private Planet Earth, Mars, Jupiter, Venus;
+	private Planet Earth, Mars, Jupiter, Venus, Mercury, Saturn, Neptune, Uranus;
 	private Satellite SpaceShip;
 	private Timer timer;
 	private ArrayList<Planet> planets;
@@ -38,16 +38,24 @@ public class SolarPanel extends JPanel
 		
 		panel = new JPanel();
 		
+		Mercury = new Planet((int)(1500*OPPSCALINGFACTOR), (int)(300*OPPSCALINGFACTOR), 25, 3.285E23, new ImageIcon("assets/Mercury.png"), "Mercury");
 		Venus = new Planet((int)(400*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 45, 4.867E25, new ImageIcon("assets/Venus.png"), "Venus");
-		Earth = new Planet((int)(500*OPPSCALINGFACTOR), (int)(1000*OPPSCALINGFACTOR), 50, 5.97219E25, new ImageIcon("assets/Earth.png"), "Earth");
-		Mars = new Planet((int)(900*OPPSCALINGFACTOR), (int)(500*OPPSCALINGFACTOR), 40, 6.39E24, new ImageIcon("assets/Mars.png"), "Mars");
-		Jupiter = new Planet((int)(1800*OPPSCALINGFACTOR), (int)(1000*OPPSCALINGFACTOR), 56, 8.898E25, new ImageIcon("assets/Jupiter.png"), "Jupiter");
+		Earth = new Planet((int)(400*OPPSCALINGFACTOR), (int)(1000*OPPSCALINGFACTOR), 50, 5.97219E25, new ImageIcon("assets/Earth.png"), "Earth");
+		Mars = new Planet((int)(900*OPPSCALINGFACTOR), (int)(300*OPPSCALINGFACTOR), 40, 6.39E24, new ImageIcon("assets/Mars.png"), "Mars");
+		Jupiter = new Planet((int)(1900*OPPSCALINGFACTOR), (int)(900*OPPSCALINGFACTOR), 56, 8.898E25, new ImageIcon("assets/Jupiter.png"), "Jupiter");
+		Saturn = new Planet((int)(850*OPPSCALINGFACTOR), (int)(1200*OPPSCALINGFACTOR), 55, 7.683E25, new ImageIcon("assets/Saturn.png"), "Saturn");
+		Uranus = new Planet((int)(1900*OPPSCALINGFACTOR), (int)(450*OPPSCALINGFACTOR), 35, 7.181E25, new ImageIcon("assets/Uranus.png"), "Uranus");
+		Neptune = new Planet((int)(1600*OPPSCALINGFACTOR), (int)(1300*OPPSCALINGFACTOR), 55, 7.583E25, new ImageIcon("assets/Neptune.png"), "Neptune");
 		
 		planets = new ArrayList<Planet>();
+		planets.add(Mercury);
 		planets.add(Venus);
 		planets.add(Earth);
 		planets.add(Mars);
 		planets.add(Jupiter);
+		planets.add(Saturn);
+		planets.add(Uranus);
+		planets.add(Neptune);
 		
 		timer = new Timer(20, new ActionListen());
 		timer.start();
@@ -65,7 +73,7 @@ public class SolarPanel extends JPanel
 		Graphics2D g = (Graphics2D) tg;
 		
 		//all drawings below here:
-		g.setColor(Color.black);
+		new ImageIcon("assets/bg.jpg").paintIcon(panel, g, 0, 0);
 		g.setColor(Color.blue);
 		for(Planet p : planets)
 			p.drawPlanet(panel, g);
@@ -77,6 +85,7 @@ public class SolarPanel extends JPanel
 			SpaceShip.drawSatellite(panel, g);
 			if(!SpaceShip.getMessage().equals(""))
 				g.drawString(SpaceShip.getMessage(), w/2-150, 30);
+			SpaceShip.drawOrbit(g);
 		}
 		
 		if(!placedShip && SpaceShip == null)

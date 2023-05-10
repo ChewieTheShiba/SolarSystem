@@ -160,12 +160,16 @@ public class Satellite
 				
 			double theta = Math.atan2(yDist, xDist);
 				
-			System.out.println("thetaaaaa\t" + theta);
-				
 			tempXGrav += Math.cos(theta) * Gravity;
 			tempYGrav += Math.sin(theta) * Gravity;
 			
-			if(new Rectangle((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2).intersects((int)(p.getX()*SolarPanel.SCALINGFACTOR)-20, (int)(p.getY()*SolarPanel.SCALINGFACTOR)-20, 20, 20))
+			if(!p.getName().equals("Saturn"))	
+			{	
+				if(new Rectangle((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2).intersects((int)(p.getX()*SolarPanel.SCALINGFACTOR)-20, (int)(p.getY()*SolarPanel.SCALINGFACTOR)-20, 20, 20))
+					message = "You Have Landed on " + p.getName();
+			}		
+			else
+				if(new Rectangle((int)(x*SolarPanel.SCALINGFACTOR)-radius, (int)(y*SolarPanel.SCALINGFACTOR)-radius, radius*2, radius*2).intersects((int)(p.getX()*SolarPanel.SCALINGFACTOR)+50, (int)(p.getY()*SolarPanel.SCALINGFACTOR)-20, 20, 20))
 					message = "You Have Landed on " + p.getName();
 
 		}
@@ -178,6 +182,8 @@ public class Satellite
 		
 		x += xVel * SolarPanel.time;
 		y += yVel * SolarPanel.time;
+		
+		orbit.add(new Point((int)(x*SolarPanel.SCALINGFACTOR),(int)(y*SolarPanel.SCALINGFACTOR)));
 		
 		if(!message.equals(""))
 		{
@@ -194,6 +200,13 @@ public class Satellite
 	public void setMessage(String message)
 	{
 		this.message = message;
+	}
+	
+	public void drawOrbit(Graphics2D g)
+	{
+		g.setColor(Color.pink);
+		for(Point p : orbit)
+			g.fillOval((int)p.getX(), (int)p.getY(), 5, 5);
 	}
 	
 	

@@ -2,7 +2,7 @@
 import javax.swing.JFrame;
 
 
-public class SolarFrame //Main class
+public class SolarFrame
 {
 
 	public static void main(String[] args)
